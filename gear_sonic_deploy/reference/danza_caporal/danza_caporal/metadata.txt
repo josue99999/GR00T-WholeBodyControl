@@ -1,0 +1,17 @@
+Metadata for: danza_caporal
+==============================
+
+Body part indexes:
+[0 4 10 18 5 11 19 9 16 22 28 17 23 29]
+
+Total timesteps: 1776
+
+Data arrays summary:
+  joint_pos: (1776, 29) (float64)
+  joint_vel: (1776, 29) (float64)
+  body_pos_w: (1776, 14, 3) (float64)
+  body_quat_w: (1776, 14, 4) (float64)
+  body_lin_vel_w: (1776, 14, 3) (float64)
+  body_ang_vel_w: (1776, 14, 3) (float64)
+  _body_indexes: (14,) (int64)
+  time_step_total: () (int64)

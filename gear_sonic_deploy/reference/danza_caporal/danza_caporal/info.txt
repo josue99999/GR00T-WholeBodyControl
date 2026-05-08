@@ -1,0 +1,22 @@
+Motion: danza_caporal
+Source: /home/josu/video2robot/data/Danza_caporal/robot_motion_g1.pkl
+Original FPS: 29.97
+Resampled FPS: 50.0
+Frames: 1065 -> 1776
+Duration: 35.52 s
+Body indexes: [0, 4, 10, 18, 5, 11, 19, 9, 16, 22, 28, 17, 23, 29]
+Body names:
+  [0] pelvis
+  [4] left_knee_link
+  [10] right_hip_roll_link
+  [18] torso_link
+  [5] left_ankle_pitch_link
+  [11] right_hip_yaw_link
+  [19] head_link
+  [9] right_hip_pitch_link
+  [16] waist_yaw_link
+  [22] left_shoulder_pitch_link
+  [28] left_wrist_yaw_link
+  [17] waist_roll_link
+  [23] left_shoulder_roll_link
+  [29] left_rubber_hand
