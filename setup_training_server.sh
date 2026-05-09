@@ -120,9 +120,18 @@ echo "  This installs Isaac Sim as Python pip packages — no GUI / Omniverse ne
 echo "  Download size: ~8-15 GB depending on CUDA version. This will take a while."
 echo ""
 
-uv pip install \
-    "isaacsim[all,extscache]==$ISAACSIM_VERSION" \
-    --extra-index-url "$NVIDIA_PYPI"
+AVAILABLE=$(uv pip index versions isaacsim --extra-index-url "$NVIDIA_PYPI" 2>/dev/null | grep -oP '\d+\.\d+\.\d+[\w.]*' | head -1)
+if [[ -n "$AVAILABLE" ]]; then
+    info "Using available Isaac Sim version: $AVAILABLE"
+    ISAACSIM_INSTALL="isaacsim[all,extscache]==$AVAILABLE"
+else
+    info "Using pinned Isaac Sim version: $ISAACSIM_VERSION"
+    ISAACSIM_INSTALL="isaacsim[all,extscache]==$ISAACSIM_VERSION"
+fi
+
+uv pip install "$ISAACSIM_INSTALL" \
+    --extra-index-url "$NVIDIA_PYPI" \
+    --index-strategy unsafe-best-match
 
 info "Isaac Sim installed."
 
