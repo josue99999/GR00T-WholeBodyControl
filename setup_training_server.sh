@@ -5,8 +5,8 @@
 #
 # What this does:
 #   1. Checks prerequisites (GPU, CUDA driver, disk space)
-#   2. Installs uv + Python 3.11 virtual environment
-#   3. Installs Isaac Lab (pip headless — no Isaac Sim GUI needed)
+#   2. Installs uv + Python 3.10 virtual environment
+#   3. Installs Isaac Sim 4.5.0.0 + Isaac Lab 2.3.0 (pip headless)
 #   4. Installs gear_sonic[training] dependencies
 #   5. Downloads training checkpoint + SMPL data from Hugging Face (~30 GB)
 #   6. Runs environment pre-flight check
@@ -18,6 +18,12 @@
 # After setup, activate the venv and run training:
 #   source .venv_training/bin/activate
 #   bash setup_training_server.sh --train        # run fine-tuning directly
+#
+# Known server quirks handled automatically:
+#   - NTFS filesystems: UV_CACHE_DIR redirected to /tmp to avoid chmod errors
+#   - Isaac Sim 4.x: requires Python 3.10 (cp310 wheels only, NOT 3.11)
+#   - Isaac Sim version: 4.5.0.0 (NVIDIA PyPI name, NOT 4.5.0.post0)
+#   - Isaac Sim auto-detects available version from NVIDIA PyPI if pinned fails
 # =============================================================================
 
 set -euo pipefail
