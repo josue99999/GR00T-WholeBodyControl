@@ -28,7 +28,7 @@ PYTHON_VERSION="3.11"
 
 # Isaac Lab / Isaac Sim versions (change here if newer versions are available)
 # Ref: https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html
-ISAACSIM_VERSION="4.5.0.post0"
+ISAACSIM_VERSION="4.5.0.0"
 ISAACLAB_VERSION="2.3.0"
 NVIDIA_PYPI="https://pypi.nvidia.com"
 
