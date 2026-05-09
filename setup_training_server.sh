@@ -24,7 +24,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="$REPO_ROOT/.venv_training"
-PYTHON_VERSION="3.11"
+PYTHON_VERSION="3.10"
 
 # Isaac Lab / Isaac Sim versions (change here if newer versions are available)
 # Ref: https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html
@@ -129,7 +129,7 @@ else
     ISAACSIM_INSTALL="isaacsim[all,extscache]==$ISAACSIM_VERSION"
 fi
 
-uv pip install "$ISAACSIM_INSTALL" \
+UV_CACHE_DIR=/tmp/uv-cache uv pip install "$ISAACSIM_INSTALL" \
     --extra-index-url "$NVIDIA_PYPI" \
     --index-strategy unsafe-best-match
 
