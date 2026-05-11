@@ -99,7 +99,7 @@ def download_file(hf_hub_download, repo_id, hf_filename, local_dest, token=None)
         token=token,
     )
     local_dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(cached, local_dest)
+    shutil.copy(cached, local_dest)  # copy2 fails on NTFS (utime not permitted)
     print(f"  -> {local_dest}")
 
 
@@ -118,7 +118,7 @@ def download_and_extract_smpl(hf_hub_download, repo_id, output_dir, token=None):
             part_paths.append(local_dest)
             continue
         cached = hf_hub_download(repo_id=repo_id, filename=hf_filename, token=token)
-        shutil.copy2(cached, local_dest)
+        shutil.copy(cached, local_dest)  # copy2 fails on NTFS (utime not permitted)
         part_paths.append(local_dest)
         print(f"  Downloaded {local_name}")
 
