@@ -91,27 +91,29 @@ bash deploy.sh sim
 
 ### Setup del servidor (una sola vez)
 
-Clona este repo en el servidor y corre el script de setup. Instala automáticamente Isaac Sim, Isaac Lab, todas las dependencias y descarga el checkpoint base + datos SMPL desde Hugging Face (~30 GB).
+Clona este repo en el servidor y corre el script de setup. Instala automáticamente Isaac Sim, Isaac Lab, todas las dependencias y descarga el checkpoint base + datos SMPL desde Hugging Face (~12 GB).
 
 ```bash
 git clone --branch danza-caporal-finetuning \
-    git@github.com:josue99999/GR00T-WholeBodyControl.git
+    https://github.com/josue99999/GR00T-WholeBodyControl.git
 cd GR00T-WholeBodyControl
 bash setup_training_server.sh
 ```
 
 El script hace:
-1. Verifica GPU (driver >= 525), espacio en disco y git-lfs
-2. Instala uv + Python 3.11
-3. Instala Isaac Sim 4.5.0 headless via pip (~8-15 GB)
-4. Instala Isaac Lab 2.3.0
-5. Instala `gear_sonic[training]` (Hydra, TRL, HuggingFace, W&B, etc.)
-6. Descarga `sonic_release/last.pt` + `data/smpl_filtered/` desde HuggingFace
+1. Verifica GPU (driver >= 525) y git-lfs
+2. Detecta si el disco es NTFS — si es así, crea una imagen ext4 de 30 GB en el mismo disco (pip no puede instalar en NTFS por restricciones POSIX)
+3. Instala uv + Python 3.10 (Isaac Sim 4.x solo tiene wheels cp310, no 3.11)
+4. Instala Isaac Sim 4.5.0.0 headless via pip (~8-15 GB)
+5. Instala Isaac Lab 2.3.0
+6. Instala `gear_sonic[training]` (Hydra, TRL, HuggingFace, W&B, etc.)
+7. Descarga `sonic_release/last.pt` + `data/smpl_filtered/` desde HuggingFace
+8. Genera `activate_training.sh` con la ruta correcta al venv
 
 ### Correr el fine-tuning
 
 ```bash
-source .venv_training/bin/activate
+source activate_training.sh
 
 # 1 GPU (lento pero funcional)
 python gear_sonic/train_agent_trl.py \
@@ -163,7 +165,7 @@ Genera los archivos ONNX en `exported/` listos para copiar a `gear_sonic_deploy/
 |---|---|
 | GPU | NVIDIA con CUDA 12.x (A100/H100 recomendado, mínimo 1 GPU) |
 | Driver | >= 525 |
-| Python | 3.11 (training) / 3.10+ (simulación y deploy) |
+| Python | 3.10 (training + simulación + deploy) |
 | Isaac Lab | 2.3+ |
 | Disco | >= 80 GB libres |
 | RAM | >= 32 GB |
