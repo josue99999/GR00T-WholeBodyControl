@@ -34,7 +34,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_VERSION="3.10"
 ISAACSIM_VERSION="4.5.0.0"
-ISAACLAB_VERSION="2.3.0"
+ISAACLAB_VERSION="2.1.0"
 NVIDIA_PYPI="https://pypi.nvidia.com"
 EXT4_IMG_SIZE_GB=30
 
@@ -179,6 +179,16 @@ info "Isaac Sim installed."
 # STEP 3 — Install Isaac Lab
 # =============================================================================
 step "3 / 7  Installing Isaac Lab $ISAACLAB_VERSION"
+
+# Auto-detect latest available if pinned version doesn't exist on PyPI
+if ! python -m pip index versions isaaclab 2>/dev/null | grep -q "$ISAACLAB_VERSION"; then
+    ISAACLAB_LATEST=$(python -m pip index versions isaaclab 2>/dev/null \
+        | grep -oP '\d+\.\d+\.\d+' | head -1)
+    if [[ -n "$ISAACLAB_LATEST" ]]; then
+        warn "isaaclab==$ISAACLAB_VERSION not found on PyPI. Using latest: $ISAACLAB_LATEST"
+        ISAACLAB_VERSION="$ISAACLAB_LATEST"
+    fi
+fi
 
 # shellcheck disable=SC2086
 TMPDIR="$PIP_TMPDIR" python -m pip install \

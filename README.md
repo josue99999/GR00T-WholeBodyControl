@@ -166,7 +166,7 @@ Genera los archivos ONNX en `exported/` listos para copiar a `gear_sonic_deploy/
 | GPU | NVIDIA con CUDA 12.x (A100/H100 recomendado, mínimo 1 GPU) |
 | Driver | >= 525 |
 | Python | 3.10 (training + simulación + deploy) |
-| Isaac Lab | 2.3+ |
+| Isaac Lab | 2.1+ |
 | Disco | >= 80 GB libres |
 | RAM | >= 32 GB |
 
