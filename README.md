@@ -105,25 +105,27 @@ El script hace:
 2. Detecta si el disco es NTFS — si es así, crea una imagen ext4 de 30 GB en el mismo disco (pip no puede instalar en NTFS por restricciones POSIX)
 3. Instala uv + Python 3.10 (Isaac Sim 4.x solo tiene wheels cp310, no 3.11)
 4. Instala Isaac Sim 4.5.0.0 headless via pip (~8-15 GB)
-5. Instala Isaac Lab 2.3.0
+5. Instala Isaac Lab 2.1.0 (última versión disponible en PyPI; 2.3.x no está publicado)
 6. Instala `gear_sonic[training]` (Hydra, TRL, HuggingFace, W&B, etc.)
 7. Descarga `sonic_release/last.pt` + `data/smpl_filtered/` desde HuggingFace
 8. Genera `activate_training.sh` con la ruta correcta al venv
 
 ### Correr el fine-tuning
 
+> **Nota de escala**: el config oficial usa `num_envs=4096` con 8+ GPUs. En una sola GPU, usa el máximo que aguante la VRAM. En una RTX 4060 Ti (16 GB) caben ~256 envs; en una A100 (80 GB) puedes llegar a 1024+.
+
 ```bash
 source activate_training.sh
 
-# 1 GPU (lento pero funcional)
+# 1 GPU — ajusta num_envs según VRAM disponible (256 para 16 GB, 512+ para 40/80 GB)
 python gear_sonic/train_agent_trl.py \
     +exp=manager/universal_token/all_modes/sonic_release \
     +checkpoint=sonic_release/last.pt \
-    num_envs=64 headless=True \
+    num_envs=256 headless=True \
     ++manager_env.commands.motion.motion_lib_cfg.motion_file=data/motion_lib_custom/robot \
     ++manager_env.commands.motion.motion_lib_cfg.smpl_motion_file=data/smpl_filtered
 
-# 8 GPUs (recomendado)
+# 8 GPUs (recomendado por NVIDIA para fine-tuning)
 accelerate launch --num_processes=8 gear_sonic/train_agent_trl.py \
     +exp=manager/universal_token/all_modes/sonic_release \
     +checkpoint=sonic_release/last.pt \
@@ -131,14 +133,11 @@ accelerate launch --num_processes=8 gear_sonic/train_agent_trl.py \
     ++manager_env.commands.motion.motion_lib_cfg.motion_file=data/motion_lib_custom/robot \
     ++manager_env.commands.motion.motion_lib_cfg.smpl_motion_file=data/smpl_filtered
 
-# Con W&B logging
+# Reanudar desde un checkpoint existente
 python gear_sonic/train_agent_trl.py \
     +exp=manager/universal_token/all_modes/sonic_release \
-    +checkpoint=sonic_release/last.pt \
-    +opt=wandb \
-    ++wandb.wandb_project=gr00t-danza-caporal \
-    ++wandb.wandb_entity=TU_USUARIO_WANDB \
-    num_envs=64 headless=True \
+    +experiment_dir=logs_rl/TRL_G1_Track/manager/universal_token/all_modes/<exp-timestamp> \
+    num_envs=256 headless=True \
     ++manager_env.commands.motion.motion_lib_cfg.motion_file=data/motion_lib_custom/robot \
     ++manager_env.commands.motion.motion_lib_cfg.smpl_motion_file=data/smpl_filtered
 ```
@@ -166,7 +165,7 @@ Genera los archivos ONNX en `exported/` listos para copiar a `gear_sonic_deploy/
 | GPU | NVIDIA con CUDA 12.x (A100/H100 recomendado, mínimo 1 GPU) |
 | Driver | >= 525 |
 | Python | 3.10 (training + simulación + deploy) |
-| Isaac Lab | 2.1+ |
+| Isaac Lab | 2.1.0 (2.3.x no está en PyPI; polyfills incluidos en este fork) |
 | Disco | >= 80 GB libres |
 | RAM | >= 32 GB |
 

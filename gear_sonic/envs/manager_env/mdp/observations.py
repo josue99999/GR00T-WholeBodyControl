@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from isaaclab.utils.math import (
     matrix_from_quat,
     quat_apply,
-    quat_apply_inverse,
     quat_apply_yaw,
     quat_conjugate,
     quat_inv,
@@ -15,6 +14,13 @@ from isaaclab.utils.math import (
     subtract_frame_transforms,
 )
 import torch
+
+# quat_apply_inverse added in Isaac Lab 2.3+; polyfill for 2.1.x
+try:
+    from isaaclab.utils.math import quat_apply_inverse
+except ImportError:
+    def quat_apply_inverse(q: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+        return quat_apply(quat_inv(q), v)
 
 from gear_sonic.envs.env_utils import joint_utils
 from gear_sonic.envs.manager_env.mdp import commands, utils

@@ -33,13 +33,19 @@ def debug_visualize_object_projection(
         show_predicted: Whether to also visualize predicted object position (in red)
     """
     import cv2
+    import torch as _torch
     from isaaclab.utils.math import (
         quat_apply,
-        quat_apply_inverse,
         quat_conjugate,
         quat_from_euler_xyz,
+        quat_inv,
         quat_mul,
     )
+    try:
+        from isaaclab.utils.math import quat_apply_inverse
+    except ImportError:
+        def quat_apply_inverse(q: _torch.Tensor, v: _torch.Tensor) -> _torch.Tensor:
+            return quat_apply(quat_inv(q), v)
 
     # Get the image for the specified environment
     debug_img = rgb_image[debug_env_idx].detach().cpu().numpy()

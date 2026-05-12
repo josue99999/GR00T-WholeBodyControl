@@ -8,7 +8,7 @@
 #   2. Detects filesystem — if NTFS, creates a 30 GB ext4 loop image on the
 #      same disk so pip can install packages without POSIX permission errors
 #   3. Creates Python 3.10 venv + bootstraps pip
-#   4. Installs Isaac Sim 4.5.0.0 + Isaac Lab 2.3.0 (headless pip)
+#   4. Installs Isaac Sim 4.5.0.0 + Isaac Lab 2.1.0 (headless pip; 2.3.x not on PyPI)
 #   5. Installs gear_sonic[training] dependencies
 #   6. Downloads training checkpoint + SMPL data from Hugging Face (~12 GB)
 #   7. Runs environment pre-flight check

@@ -17,11 +17,19 @@ from isaaclab.managers import ManagerTermBase, SceneEntityCfg, TerminationTermCf
 from isaaclab.utils import configclass
 from isaaclab.utils.math import (
     axis_angle_from_quat,
-    quat_apply_inverse,
+    quat_apply,
     quat_conjugate,
     quat_error_magnitude,
+    quat_inv,
     quat_mul,
 )
+
+# quat_apply_inverse added in Isaac Lab 2.3+; polyfill for 2.1.x
+try:
+    from isaaclab.utils.math import quat_apply_inverse
+except ImportError:
+    def quat_apply_inverse(q: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+        return quat_apply(quat_inv(q), v)
 
 from gear_sonic.envs.manager_env.mdp.commands import TrackingCommand, _get_body_indexes
 from gear_sonic.trl.utils.torch_transform import get_heading_q
